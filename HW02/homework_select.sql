@@ -66,8 +66,8 @@ WHERE P.PurchaseOrderID IS NULL
 SELECT DISTINCT
 O.OrderID
 ,convert(varchar, O.OrderDate, 104) AS OrderDate
-,datename(month, O.OrderDate) AS Month
-,DATEPART(QUARTER, O.OrderDate) AS QUARTER
+,datename(month, O.OrderDate) AS SalesMonth
+,DATEPART(QUARTER, O.OrderDate) AS SalesQuater
 ,CASE
 			WHEN MONTH(O.OrderDate) in (1, 2, 3, 4)
 			THEN 1
@@ -78,12 +78,12 @@ O.OrderID
 			END AS SalesThird
 ,C.CustomerName
 FROM Sales.Orders O
-INNER JOIN Sales.Customers C ON C.CustomerID = O.CustomerID
+INNER JOIN Sales.Customers C ON C.CustomerID = O.CustomerIDa
 INNER JOIN Sales.OrderLines OL ON OL.OrderID = O.OrderID
-WHERE OL.UnitPrice > 100 
-OR  OL.Quantity > 20
+WHERE (OL.UnitPrice > 100 
+OR  OL.Quantity > 20)
 AND O.PickingCompletedWhen IS NOT NULL
-ORDER BY QUARTER,SalesThird,OrderDate
+ORDER BY SalesQuater,SalesThird,OrderDate
 OFFSET 1000 ROWS
 FETCH NEXT 100 ROWS ONLY
 
